@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Be My Valentine 💘</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Be My Valentine 💘</title>
 
   <style>
     * {
@@ -53,7 +53,6 @@
       transition: transform 0.2s ease;
       position: absolute;
       top: 0;
-      left: 0;
     }
 
     #yesBtn {
@@ -64,7 +63,6 @@
 
     #noBtn {
       background: #f1f1f1;
-      left: auto;
       right: 0;
     }
 
@@ -86,7 +84,8 @@
       text-align: center;
       width: 100%;
       max-width: 360px;
-      animation: pop 0.3s ease;
+      box-shadow: 0 0 40px rgba(255, 77, 109, 0.6);
+      animation: popIn 0.4s ease;
     }
 
     .popup img {
@@ -95,12 +94,26 @@
       margin-top: 14px;
     }
 
-    @keyframes pop {
-      from { transform: scale(0.8); opacity: 0; }
+    /* 💖 Heart burst */
+    .heart {
+      position: fixed;
+      font-size: 20px;
+      animation: floatUp 1.2s ease forwards;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-120px) scale(1.8); opacity: 0; }
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.7); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
+
 <body>
 
   <div class="card">
@@ -115,8 +128,7 @@
     <div class="popup-content">
       <h2>Congrats! 💕</h2>
       <p>You are officially my Valentine 😘</p>
-      <img src="valentine.png" alt="Valentine" width="200">
-      
+      <img src="/valentine.png" alt="">
       <p style="margin-top:10px;font-size:13px;color:#777;">Tap anywhere to close</p>
     </div>
   </div>
@@ -134,7 +146,6 @@
 
     function moveButton() {
       const containerRect = container.getBoundingClientRect();
-
       const maxX = containerRect.width - rect.width;
       const maxY = containerRect.height - rect.height;
 
@@ -144,14 +155,26 @@
       noBtn.style.transform = `translate(${x}px, ${y}px)`;
     }
 
-    // Desktop + mobile
     noBtn.addEventListener("mouseenter", moveButton);
     noBtn.addEventListener("touchstart", moveButton);
     noBtn.addEventListener("click", moveButton);
 
-    yesBtn.addEventListener("click", () => {
+    // 💖 YES click = popup + hearts
+    yesBtn.onclick = () => {
       popup.style.display = "flex";
-    });
+
+      for (let i = 0; i < 12; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "💖";
+
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.top = window.innerHeight / 2 + "px";
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1200);
+      }
+    };
 
     popup.addEventListener("click", () => {
       popup.style.display = "none";
@@ -160,4 +183,3 @@
 
 </body>
 </html>
-
